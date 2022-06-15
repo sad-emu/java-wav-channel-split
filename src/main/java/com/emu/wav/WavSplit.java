@@ -8,14 +8,8 @@ import java.util.List;
 
 public class WavSplit {
 
-    private static boolean matches(byte[] array1, byte[] array2){
-        for(int i = 0; i < array1.length; i++){
-            if(array1[i] != array2[i])
-                return false;
-        }
-        return true;
-    }
-
+    // Split a single WAV into multiple wave file per it's channels
+    // For example a stereo file will split into 2 files, a left and right side
     public static int splitWav(InputStream wavIn, List<OutputStream> wavsOut) throws IOException {
         // Parse the header of input file
         WavHeader initialHeader = new WavHeader(wavIn);
@@ -26,13 +20,16 @@ public class WavSplit {
 
         // Setup then write the new output headers
         WavHeader[] newHeaders = new WavHeader[channelCount];
+        final int headerSize = initialHeader.getBytes().length;
+        final int byteSize = 8;
+        final int numChannels = 1;
         for(int i = 0; i < channelCount; i++){
             newHeaders[i] = new WavHeader(initialHeader);
-            newHeaders[i].setNumChannels((short) 1);
+            newHeaders[i].setNumChannels((short) numChannels);
             newHeaders[i].setDataSize(initialHeader.getDataSize() /  channelCount);
-            newHeaders[i].setFileSize((initialHeader.getFileSize() - 44) / channelCount);
-            newHeaders[i].setByteRate(initialHeader.getSampleRate() * 1 * initialHeader.getBitsPerSample() / 8);
-            newHeaders[i].setBlockAlign((short)(1 * newHeaders[i].getBitsPerSample() / 8));
+            newHeaders[i].setFileSize((initialHeader.getFileSize() - headerSize) / channelCount);
+            newHeaders[i].setByteRate(initialHeader.getSampleRate() * initialHeader.getBitsPerSample() / byteSize);
+            newHeaders[i].setBlockAlign((short)(newHeaders[i].getBitsPerSample() / byteSize));
             wavsOut.get(i).write(newHeaders[i].getBytes());
         }
 
@@ -46,7 +43,6 @@ public class WavSplit {
                 wavsOut.get(x).write(sample, x*sampleParts, sampleParts);
             }
         }
-
         return channelCount;
     }
 }

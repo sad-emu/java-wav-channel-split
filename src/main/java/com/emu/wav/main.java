@@ -8,6 +8,19 @@ import java.util.List;
 
 public class main {
     public static void main(String[] args) {
+        try{
+            InputStream inputWav = new FileInputStream("C:\\Users\\ted\\Documents\\Audacity\\1.wav");
+            WavHeader header = new WavHeader(inputWav);
+            OutputStream outStream = new FileOutputStream("C:\\Users\\ted\\Documents\\Audacity\\headervalid.bytes");
+            outStream.write(header.getBytes());
+            outStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         System.out.println("Enter the file path of the WAV you want to split...");
         String inPath = System.console().readLine();
         System.out.println("Enter the file path for the output file in channel 1");
@@ -24,9 +37,6 @@ public class main {
             InputStream inputWav = new FileInputStream(inPath);
             WavSplit split = new WavSplit();
             split.splitWav(inputWav, outWavs);
-//            InputStream iS = new FileInputStream(inPath);
-//            WavHeader header = new WavHeader(iS);
-//            System.out.println(header.toString());
             System.out.println("Done!");
         } catch (Exception exc){
             System.out.print(exc);

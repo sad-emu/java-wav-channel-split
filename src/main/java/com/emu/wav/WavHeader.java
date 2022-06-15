@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
+// Simple class to manipulate wav headers
+// Note the endian swaps for reading and writing data
 public class WavHeader {
     private final String RIFF_FILE_HEADER = "RIFF";
     private int fileSize = -1;
@@ -33,24 +35,18 @@ public class WavHeader {
     public short getBitsPerSample() {return this.bitsPerSample; }
     public int getDataSize() {return this.dataSize; }
 
-
-
     public void setNumChannels(short numChannels){
         this.numChannels = numChannels;
     }
-
     public void setByteRate(int byteRate){
         this.byteRate = byteRate;
     }
-
     public void setBlockAlign(short blockAlign){
         this.blockAlign = blockAlign;
     }
-
     public void setFileSize(int fileSize){
         this.fileSize = fileSize;
     }
-
     public void setDataSize(int dataSize){
         this.dataSize = dataSize;
     }
@@ -72,7 +68,6 @@ public class WavHeader {
         retBuffer.put(ByteBuffer.allocate(4).putInt(Integer.reverseBytes(dataSize)).array());
         return retBuffer.array();
     }
-
 
     @Override
     public String toString(){
