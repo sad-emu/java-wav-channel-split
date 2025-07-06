@@ -12,7 +12,7 @@ public class main {
         String inPath = System.console().readLine();
         System.out.println("Enter the file path for the output file in channel 1");
         String outPath1 = System.console().readLine();
-        System.out.println("Enter the file path for the output file in channel 1");
+        System.out.println("Enter the file path for the output file in channel 2");
         String outPath2 = System.console().readLine();
         System.out.println("Starting...");
         try{
